@@ -1,0 +1,6 @@
+flask
+gunicorn
+pdf2docx
+pandas
+openpyxl
+PyPDF2

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Free PDF to Excel Converter</h1>
+  <p class="text-sm text-gray-600 mb-4">Extract tables and structured data from PDF to editable Excel (.xlsx). Works best with digital PDFs (not scans).</p>
+
+  <div x-data="uploader('/api/pdf-to-excel')" class="bg-white p-6 rounded-lg shadow">
+    <label class="block">
+      <div @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false" @drop.prevent="handleDrop($event)"
+           :class="dragging ? 'border-indigo-400 bg-indigo-50' : 'border-dashed border-gray-200 bg-white'"
+           class="border-2 rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer text-center">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5V19a2 2 0 002 2h14a2 2 0 002-2v-2.5M7 9l5-5 5 5"/></svg>
+        <div class="mt-4">
+          <div x-show="!fileName" class="text-sm text-gray-600">Drag & drop your PDF here, or <span class="text-indigo-600 underline">browse</span></div>
+          <div x-show="fileName" class="text-sm text-gray-700 font-medium">Selected: <span x-text="fileName"></span></div>
+        </div>
+        <input type="file" accept=".pdf" class="hidden" x-ref="input" @change="handleFiles($event)" />
+      </div>
+    </label>
+
+    <div class="mt-4">
+      <button @click="upload()" :disabled="!file" class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50">Convert</button>
+    </div>
+
+    <div class="mt-4" x-show="progressVisible">
+      <div class="w-full bg-gray-200 rounded">
+        <div class="h-3 rounded bg-indigo-500" :style="`width: ${progress}%`"></div>
+      </div>
+      <div class="mt-2 text-sm text-gray-600">Progress: <span x-text="progress + '%'">0%</span></div>
+    </div>
+
+    <div class="mt-4" x-show="downloadUrl">
+      <a :href="downloadUrl" class="px-4 py-2 bg-green-600 text-white rounded" download>Download Converted File</a>
+    </div>
+
+    <div class="mt-4 text-sm text-gray-500">
+      <strong>Tip:</strong> For scanned PDFs, use OCR before conversion. For high-accuracy table extraction consider Camelot or Tabula integrations.
+    </div>
+  </div>
+
+  <section class="mt-6 text-sm text-gray-600">
+    <h2 class="font-semibold">How it works</h2>
+    <p>We parse PDF pages and try to detect table structures. Detected tables are written into Excel worksheets. For pages without tables we add lines of text.</p>
+  </section>
+</div>
+
+<script>
+function uploader(apiEndpoint){
+  return {
+    dragging:false,
+    file: null,
+    fileName: '',
+    progress: 0,
+    progressVisible: false,
+    downloadUrl: '',
+    handleDrop(e){
+      this.dragging = false;
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if(files.length) this.setFile(files[0]);
+    },
+    handleFiles(e){
+      const files = e.target.files;
+      if(files.length) this.setFile(files[0]);
+    },
+    setFile(f){
+      this.file = f;
+      this.fileName = f.name;
+      this.downloadUrl = '';
+      this.progress = 0;
+    },
+    upload(){
+      if(!this.file) return;
+      this.progressVisible = true;
+      const xhr = new XMLHttpRequest();
+      const form = new FormData();
+      form.append('file', this.file);
+      xhr.open('POST', apiEndpoint, true);
+      xhr.responseType = 'blob';
+      xhr.upload.onprogress = (e) => {
+        if(e.lengthComputable){
+          this.progress = Math.round((e.loaded / e.total) * 100);
+        }
+      };
+      xhr.onload = () => {
+        if(xhr.status === 200){
+          const blob = xhr.response;
+          const url = window.URL.createObjectURL(blob);
+          this.downloadUrl = url;
+          this.progress = 100;
+        } else {
+          alert('Conversion failed. Please try a different file.');
+          this.progressVisible = false;
+        }
+      };
+      xhr.onerror = () => {
+        alert('Upload error. Try again.');
+        this.progressVisible = false;
+      };
+      xhr.send(form);
+    }
+  }
+}
+</script>
+{% endblock %}

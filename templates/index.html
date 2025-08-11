@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Free Online File Conversion Tools</h1>
+  <p class="text-gray-700 mb-6">Convert PDFs and spreadsheets quickly with our drag & drop tools. No signup, no watermarks.</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <a href="/pdf-to-excel" class="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold">PDF → Excel</h3>
+      <p class="mt-2 text-sm text-gray-500">Extract tables and text from PDFs into .xlsx files. Ideal for invoices, reports, and datasets.</p>
+    </a>
+
+    <a href="/excel-to-pdf" class="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold">Excel → PDF</h3>
+      <p class="mt-2 text-sm text-gray-500">Convert Excel spreadsheets into printable PDFs. Good for sharing and archiving.</p>
+    </a>
+  </div>
+
+  <section class="mt-8 bg-white p-6 rounded shadow">
+    <h2 class="text-xl font-semibold mb-2">Why use FileConvert?</h2>
+    <ul class="list-disc ml-5 text-gray-600">
+      <li>Fast, secure conversions directly in your browser.</li>
+      <li>Drag & drop UX with progress feedback.</li>
+      <li>No signup required for basic conversions.</li>
+    </ul>
+  </section>
+
+  <section class="mt-6 text-sm text-gray-600">
+    <h2 class="font-semibold">FAQ</h2>
+    <p><strong>Is my file safe?</strong> Files are stored temporarily and removed after conversion. For production, configure automatic cleanup and virus scanning.</p>
+  </section>
+</div>
+{% endblock %}

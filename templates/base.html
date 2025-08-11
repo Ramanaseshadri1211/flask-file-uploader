@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title or 'FileConvert - Free online file converters' }}</title>
+  <meta name="description" content="{{ description or 'Free online file conversion tools: PDF to Excel, Excel to PDF. Drag & drop. No signup.' }}"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="canonical" href="{{ request.url }}"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <!-- Google Analytics placeholder - replace GA_MEASUREMENT_ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="text-2xl font-bold text-slate-800">FileConvert<span class="text-indigo-600">.</span></a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="text-slate-600 hover:text-indigo-600">Home</a>
+        <a href="/pdf-to-excel" class="text-slate-600 hover:text-indigo-600">PDF → Excel</a>
+        <a href="/excel-to-pdf" class="text-slate-600 hover:text-indigo-600">Excel → PDF</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container mx-auto px-6 py-8">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="border-t bg-white">
+    <div class="container mx-auto px-6 py-6 text-sm text-gray-500">© 2025 FileConvert — built with ❤️</div>
+  </footer>
+</body>
+</html>
